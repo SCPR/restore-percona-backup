@@ -72,7 +72,7 @@ func (r *Restore) Run() error {
 	wg.Wait()
 
 	// call prepare one last time
-	cmd := exec.Command("xtrabackup", "--prepare", "--target-dir", r.TargetDir)
+	cmd := exec.Command("innobackupex", "--apply-log", r.TargetDir)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -158,14 +158,14 @@ func (r *Restore) applyRuns(wg *sync.WaitGroup) {
 			r.TargetDir = br.ExtractedDir
 		}
 
-		args := []string{"--prepare", "--apply-log-only", "--target-dir", r.TargetDir}
+		args := []string{"--apply-log", "--redo-only", r.TargetDir}
 
 		if br.RunType == "incremental" {
 			args = append(args, "--incremental-dir", br.ExtractedDir)
 		}
 
-		log.Printf("Running xtrabackup %s", strings.Join(args, " "))
-		cmd := exec.Command("xtrabackup", args...)
+		log.Printf("Running innobackupex %s", strings.Join(args, " "))
+		cmd := exec.Command("innobackupex", args...)
 
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
