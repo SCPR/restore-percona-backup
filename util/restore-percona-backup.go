@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/cheggaaa/pb"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -126,7 +127,13 @@ func (r *Restore) downloadRuns() {
 
 		defer resp.Body.Close()
 
-		reader, err := gzip.NewReader(resp.Body)
+		progress := pb.New(int(resp.ContentLength)).SetUnits(pb.U_BYTES)
+		progress.SetWidth(80)
+		progress.Start()
+
+		pbreader := progress.NewProxyReader(resp.Body)
+
+		reader, err := gzip.NewReader(pbreader)
 
 		if err != nil {
 			log.Fatal("Failed to set up gzip reader: ", err)
@@ -186,7 +193,6 @@ func main() {
 	token := flag.Arg(0)
 
 	restore_json_url := fmt.Sprintf("%s?token=%s", *uri, token)
-	log.Printf("Restore JSON URI will be %s", restore_json_url)
 
 	// Fetch the restore json
 	resp, err := http.Get(restore_json_url)
@@ -208,8 +214,6 @@ func main() {
 
 	var restoreJSON RestoreJSON
 	err = json.Unmarshal(body, &restoreJSON)
-
-	log.Printf("resp is %s", restoreJSON)
 
 	restore := NewRestore(&restoreJSON)
 

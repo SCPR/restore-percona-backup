@@ -38,3 +38,11 @@ Finally:
 * Run `xtrabackup --prepare --target-dir=/base/`
 * Copy backup files into /var/lib/mysql
 * Set up access permissions
+
+## Building
+
+`./build.sh` compiles the go util and builds a docker image.
+
+Before running, you'll need to install one external Go dep:
+
+`go get github.com/cheggaaa/pb`
