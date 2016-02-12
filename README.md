@@ -14,6 +14,8 @@ so restores are done using `gzip -dc | xbstream -x`.
 
 ## Restore Steps
 
+Internally, here's what's going on:
+
 Given a JSON file containing an array of backup URLs, where array[0] is
 base and array[1..-1] are incrementals in ascending order...
 
