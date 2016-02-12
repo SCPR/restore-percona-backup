@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 mkdir -p /var/lib/mysql
@@ -9,8 +9,9 @@ mysql_install_db --datadir=/var/lib/mysql --user=mysql
 mysqld &
 pid="$!"
 
+mysql=( mysql --protocol=socket -uroot )
 for i in {30..0}; do
-	if echo 'SELECT 1' | mysql &> /dev/null; then
+	if echo 'SELECT 1' | "${mysql[@]}" &> /dev/null; then
 		break
 	fi
 	echo 'MySQL init process in progress...'
@@ -21,7 +22,7 @@ if [ "$i" = 0 ]; then
 	exit 1
 fi
 
-echo "GRANT ALL PRIVILEGES ON *.* to root@`%` WITH GRANT OPTION;" | mysql
-echo "FLUSH PRIVILEGES;" | mysql
+echo "GRANT ALL PRIVILEGES ON *.* to root@`%` WITH GRANT OPTION;" | "${mysql[@]}"
+echo "FLUSH PRIVILEGES;" | "${mysql[@]}"
 
 wait $pid
