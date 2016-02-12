@@ -9,7 +9,7 @@ so restores are done using `gzip -dc | xbstream -x`.
 ## Using the Image
 
 1) Get a restore token from Deploybot
-2) Launch the docker image with the deploy token: `docker run -p 3306 "scpr/restore-percona-backup (token)"`
+2) Launch the docker image with the deploy token: `docker run -p 3306:3306 "scpr/restore-percona-backup (token)"`
 3) Once MySQL is launched, connect with: `mysql -h $(docker-machine ip default) -u root`
 
 ## Components
