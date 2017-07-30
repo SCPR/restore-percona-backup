@@ -45,4 +45,4 @@ Finally:
 
 Before running, you'll need to install one external Go dep:
 
-`go get github.com/cheggaaa/pb`
+`go get gopkg.in/cheggaaa/pb.v1`
